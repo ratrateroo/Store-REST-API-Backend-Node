@@ -4,6 +4,7 @@ exports.getPosts = (req, res, next) => {
       {
         title: 'First Post',
         content: 'This is the first post!',
+        imageUrl: 'image/1DX_MARKIII.png',
       },
     ],
   });
