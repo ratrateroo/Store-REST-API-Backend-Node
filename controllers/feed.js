@@ -78,6 +78,12 @@ exports.getPost = (req, res, next) => {
 
 exports.updatePost = (req, res, next) => {
   const postId = req.params.postId;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error('Validation failed, entered data is incorrect.');
+    error.statusCode = 422;
+    throw error;
+  }
   const title = req.body.title;
   const content = req.body.content;
   let imageUrl = req.body.image;
@@ -98,7 +104,13 @@ exports.updatePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ message: 'Post fetched.', post: post });
+      post.title = title;
+      post.imageUrl = imageUrl;
+      post.content = content;
+      return post.save();
+    })
+    .then(result => {
+      res.status(200).json({ message: 'Post updated.', post: result });
     })
     .catch(err => {
       if (!err.statusCode) {
