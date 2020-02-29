@@ -23,4 +23,6 @@ router.post(
 
 router.get('/post/:postId', feedController.getPost);
 
+router.put('/post/:postId', feedController.updatePost);
+
 module.exports = router;
