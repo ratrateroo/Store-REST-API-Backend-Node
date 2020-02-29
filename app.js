@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const mongoose = require('mongoose');
 const feedRoutes = require('./routes/feed');
 
 const app = express();
@@ -20,5 +20,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/feed', feedRoutes);
-
+const MONGODB_URI = 'mongodb://localhost/storerestdb';
+mongoose.connect(MONGODB_URI);
 app.listen(8080);
