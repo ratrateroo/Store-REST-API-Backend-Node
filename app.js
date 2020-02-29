@@ -21,5 +21,11 @@ app.use((req, res, next) => {
 
 app.use('/feed', feedRoutes);
 const MONGODB_URI = 'mongodb://localhost/storerestdb';
-mongoose.connect(MONGODB_URI);
-app.listen(8080);
+mongoose
+  .connect(MONGODB_URI)
+  .then(result => {
+    console.log(result);
+    console.log('Connected to Database!');
+    app.listen(8080);
+  })
+  .catch(err => console.log(err));
