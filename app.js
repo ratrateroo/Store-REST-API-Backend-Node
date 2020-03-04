@@ -69,6 +69,7 @@ mongoose
   .then(result => {
     console.log(result);
     console.log('Connected to Database!');
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require('socket.io')(server);
   })
   .catch(err => console.log(err));
