@@ -67,7 +67,7 @@ const MONGODB_URI = 'mongodb://localhost/storerestdb';
 mongoose
   .connect(MONGODB_URI)
   .then(result => {
-    console.log(result);
+    //console.log(result);
     console.log('Connected to Database!');
     const server = app.listen(8080);
     const io = require('socket.io')(server);
