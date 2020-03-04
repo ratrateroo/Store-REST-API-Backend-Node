@@ -65,12 +65,12 @@ app.use((error, req, res, next) => {
 
 const MONGODB_URI = 'mongodb://localhost/storerestdb';
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => {
     //console.log(result);
     console.log('Connected to Database!');
     const server = app.listen(8080);
-    const io = require('socket.io')(server);
+    const io = require('./socket').init(server);
     io.on('connection', socket => {
       console.log('Client connected');
     });
