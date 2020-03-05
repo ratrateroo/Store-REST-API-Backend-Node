@@ -18,7 +18,7 @@ exports.getPosts = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
-
+    console.log(posts);
     res.status(200).json({
       message: 'Fetched posts successfully.',
       posts: posts,
