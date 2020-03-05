@@ -91,6 +91,7 @@ exports.createPost = async (req, res, next) => {
   try {
     await post.save();
     const user = await User.findById(req.userId);
+    console.log(user);
     user.posts.push(post);
     await user.save();
     io.getIO().emit('posts', {
@@ -103,7 +104,7 @@ exports.createPost = async (req, res, next) => {
     res.status(201).json({
       message: 'Post created successfully!',
       post: post,
-      creator: { _id: user._id, name: user.name },
+      creator: { _id: user._id, name: user.firstname },
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -113,8 +114,9 @@ exports.createPost = async (req, res, next) => {
   }
 };
 
-exports.getPost = (req, res, next) => {
+/* exports.getPost = (req, res, next) => {
   const postId = req.params.postId;
+  let postCollected;
   Post.findById(postId)
     .then(post => {
       if (!post) {
@@ -122,7 +124,21 @@ exports.getPost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ message: 'Post fetched.', post: post });
+      console.log(post.creator);
+      postCollected = post;
+      return post.creator;
+      //res.status(200).json({ message: 'Post fetched.', post: post });
+    })
+    .then(creator => {
+      User.findById(creator);
+    })
+    .then(user => {
+      console.log(user);
+      res.status(200).json({
+        message: 'Post fetched.',
+        post: postCollected,
+        creator: user,
+      });
     })
     .catch(err => {
       if (!err.statusCode) {
@@ -130,6 +146,25 @@ exports.getPost = (req, res, next) => {
       }
       next(err);
     });
+}; */
+
+exports.getPost = async (req, res, next) => {
+  const postId = req.params.postId;
+  const post = await Post.findById(postId).populate('creator');
+  console.log(post);
+  try {
+    if (!post) {
+      const error = new Error('Could not find post.');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ message: 'Post fetched.', post: post });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
 };
 
 exports.updatePost = (req, res, next) => {
