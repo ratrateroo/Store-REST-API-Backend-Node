@@ -46,7 +46,7 @@ exports.createPost = async (req, res, next) => {
     throw error;
   }
 
-  const imageUrl = req.file.path;
+  const imageUrl = req.file.path.replace('\\', '/');
   const title = req.body.title;
   const content = req.body.content;
 
