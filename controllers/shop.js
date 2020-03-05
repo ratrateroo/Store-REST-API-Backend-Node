@@ -13,16 +13,17 @@ exports.getProducts = async (req, res, next) => {
   const perPage = 2;
 
   try {
-    const totalItems = await Post.find().countDocuments();
-    const posts = await Post.find()
-      .populate('creator')
+    const totalItems = await Product.find().countDocuments();
+    const products = await Product.find()
+      //.populate('seller')
       .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
+    console.log(products);
 
     res.status(200).json({
       message: 'Fetched posts successfully.',
-      posts: posts,
+      products: products,
       totalItems: totalItems,
     });
   } catch (err) {

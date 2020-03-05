@@ -3,11 +3,12 @@ const express = require('express');
 const { body } = require('express-validator');
 
 const feedController = require('../controllers/feed');
+const shopController = require('../controllers/shop');
 const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
-router.get('/products', isAuth, feedController.getProducts);
+router.get('/products', shopController.getProducts);
 
 // router.post(
 //   '/post',
