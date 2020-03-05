@@ -34,6 +34,32 @@ exports.getProducts = async (req, res, next) => {
   }
 };
 
+exports.getMyProducts = async (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 2;
+
+  try {
+    const totalItems = await Product.find().countDocuments();
+    const products = await Product.find()
+      //.populate('seller')
+      .sort({ createdAt: -1 })
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage);
+    console.log(products);
+
+    res.status(200).json({
+      message: 'Fetched posts successfully.',
+      products: products,
+      totalItems: totalItems,
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 // exports.createPost = async (req, res, next) => {
 //   const errors = validationResult(req);
 //   if (!errors.isEmpty()) {

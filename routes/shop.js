@@ -10,6 +10,8 @@ const router = express.Router();
 
 router.get('/products', shopController.getProducts);
 
+router.get('/myproducts', isAuth, shopController.getMyProducts);
+
 // router.post(
 //   '/post',
 //   isAuth,
