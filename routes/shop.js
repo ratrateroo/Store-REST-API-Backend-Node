@@ -12,6 +12,19 @@ router.get('/products', shopController.getProducts);
 
 router.get('/myproducts', isAuth, shopController.getMyProducts);
 
+router.put(
+  '/addproduct',
+  isAuth,
+  [
+    body('title')
+      .trim()
+      .isLength({ min: 5 }),
+    body('description')
+      .trim()
+      .isLength({ min: 5 }),
+  ],
+  shopController.addProduct
+);
 // router.post(
 //   '/post',
 //   isAuth,

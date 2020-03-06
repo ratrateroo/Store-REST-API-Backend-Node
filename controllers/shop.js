@@ -60,6 +60,34 @@ exports.getMyProducts = async (req, res, next) => {
   }
 };
 
+exports.addProduct = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error('Validation failed, entered data is incorrect.');
+    error.statusCode = 422;
+    throw error;
+  }
+
+  if (!req.file) {
+    const error = new Error('No image provided.');
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const title = req.body.title;
+  const imageUrl = req.file.path.replace('\\', '/');
+  const price = req.body.price;
+  const description = req.body.description;
+
+  const post = new Product({
+    title: title,
+    imageUrl: imageUrl,
+    price: price,
+    description: description,
+    seller: req.userId,
+  });
+};
+
 // exports.createPost = async (req, res, next) => {
 //   const errors = validationResult(req);
 //   if (!errors.isEmpty()) {
