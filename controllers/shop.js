@@ -41,14 +41,14 @@ exports.getMyProducts = async (req, res, next) => {
   try {
     const totalItems = await Product.find().countDocuments();
     const products = await Product.find()
-      //.populate('seller')
+      .populate('seller')
       .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
     console.log(products);
 
     res.status(200).json({
-      message: 'Fetched posts successfully.',
+      message: 'Products fetched successfully.',
       products: products,
       totalItems: totalItems,
     });
@@ -61,6 +61,8 @@ exports.getMyProducts = async (req, res, next) => {
 };
 
 exports.addProduct = (req, res, next) => {
+  console.log(req);
+  let theSeller;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed, entered data is incorrect.');
@@ -79,12 +81,33 @@ exports.addProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const post = new Product({
+  const product = new Product({
     title: title,
     imageUrl: imageUrl,
     price: price,
     description: description,
     seller: req.userId,
+  });
+
+  console.log('Product: ' + product);
+
+  product
+    .save()
+    .then(result => {
+      return User.findById(req.userId);
+    })
+    .then(user => {
+      theSeller = user;
+      user.products.push(product);
+      return user.save();
+    });
+  then(user => {
+    console.log('User: ' + user);
+    res.status(201).json({
+      message: 'Product is added successfully!',
+      product: product,
+      seller: { _id: theSeller._id, name: theSeller.firstname },
+    });
   });
 };
 
