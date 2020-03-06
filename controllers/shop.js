@@ -10,12 +10,12 @@ const Product = require('../models/product');
 
 exports.getProducts = async (req, res, next) => {
   const currentPage = req.query.page || 1;
-  const perPage = 2;
+  const perPage = 10;
 
   try {
     const totalItems = await Product.find().countDocuments();
     const products = await Product.find()
-      //.populate('seller')
+      .populate('seller')
       .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
@@ -36,7 +36,7 @@ exports.getProducts = async (req, res, next) => {
 
 exports.getMyProducts = async (req, res, next) => {
   const currentPage = req.query.page || 1;
-  const perPage = 2;
+  const perPage = 10;
 
   try {
     const totalItems = await Product.find().countDocuments();
